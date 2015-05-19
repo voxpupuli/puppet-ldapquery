@@ -1,7 +1,7 @@
 begin
   require 'net/ldap'
 rescue
-  Puppet.warn("Missing net/ldap gem for ldapquery() function")
+  Puppet.warn("Missing net/ldap gem required for ldapquery() function")
 end
 
 Puppet::Parser::Functions.newfunction(:ldapquery, :type => :rvalue) do |args|
