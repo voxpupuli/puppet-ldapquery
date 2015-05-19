@@ -1,0 +1,4 @@
+[Iu:Net::LDAP::Entry¯dn: uid=zach,ou=users,dc=puppetlabs,dc=com
+sshpublickey:: c3NoLXJzYSBBQUFBQi4uLjE9PSB1c2VyQHNvbWV3aGVyZQo=
+sshpublickey:: c3NoLXJzYSBBQUFBQi4uLjI9PSB1c2VyQHNvbWV3aGVyZWVsc2UK
+:ET

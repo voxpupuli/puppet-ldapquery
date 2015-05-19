@@ -4,10 +4,14 @@ group :test do
   gem "rake"
   gem "puppet", ENV['PUPPET_VERSION'] || '~> 3.7.0'
   gem "rspec", '< 3.2.0'
+  gem 'rspec-core'
+  gem 'rspec-mocks'
+  gem 'rspec-expectations'
   gem "rspec-puppet", :git => 'https://github.com/rodjek/rspec-puppet.git'
   gem "puppetlabs_spec_helper"
   gem "metadata-json-lint"
   gem "rspec-puppet-facts"
+  gem "net-ldap"
 end
 
 group :development do
