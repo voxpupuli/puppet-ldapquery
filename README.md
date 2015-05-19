@@ -1,5 +1,7 @@
 # Puppet-LDAPquery
 
+[![Build Status](https://travis-ci.org/xaque208/puppet-ldapquery.svg?branch=master)](https://travis-ci.org/xaque208/puppet-ldapquery)
+
 A Puppet function to query LDAP.
 
 
