@@ -1,0 +1,3 @@
+[Iu:Net::LDAP::Entry:dn: uid=zach,ou=users,dc=puppetlabs,dc=com
+uid: zach
+:ET

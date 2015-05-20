@@ -1,0 +1,8 @@
+[Iu:Net::LDAP::EntryÁdn: uid=zach,ou=users,dc=puppetlabs,dc=com
+objectclass: posixAccount
+objectclass: shadowAccount
+objectclass: inetOrgPerson
+objectclass: puppetPerson
+objectclass: ldapPublicKey
+objectclass: top
+:ET
