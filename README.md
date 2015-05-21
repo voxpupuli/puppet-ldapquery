@@ -4,6 +4,9 @@
 
 A Puppet function to query LDAP.
 
+## Dependencies
+
+The Ruby `net-ldap` gem is required to communicate with LDAP.
 
 ## Sample Usage
 
