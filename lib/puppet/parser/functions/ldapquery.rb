@@ -9,11 +9,11 @@ end
 Puppet::Parser::Functions.newfunction(:ldapquery,
                                       :type => :rvalue) do |args|
 
-  if args.size > 2
+  if args.size > 3
     raise Puppet::ParseError, "Too many arguments received in ldapquery()"
   end
 
-  filter, attributes = args
+  filter, attributes, base = args
 
-  return PuppetX::LDAPquery.new(filter, attributes).results
+  return PuppetX::LDAPquery.new(filter, attributes, base).results
 end
