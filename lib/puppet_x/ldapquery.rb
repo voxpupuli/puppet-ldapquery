@@ -59,7 +59,6 @@ module PuppetX
         }
       end
 
-      Puppet.debug(conf)
       return conf
     end
 
@@ -73,8 +72,7 @@ module PuppetX
 
       conf = self.get_config()
 
-      Puppet.debug("Searching ldap base #{base} using #{@filter} for #{@attributes}")
-
+      start_time = Time.now.to_i
       ldap = Net::LDAP.new(conf)
       ldapfilter = Net::LDAP::Filter.construct(@filter)
 
@@ -87,9 +85,12 @@ module PuppetX
                     :time => 10) do |entry|
           entries << entry
         end
-        Puppet.debug(entries)
+        end_time = Time.now.to_i
+        Puppet.debug("Searching #{@base} for #{@attributes} using #{@filter} took #{end_time - start_time} seconds")
         return entries
-      rescue
+      rescue Exception => e
+        Puppet.debug('There was an error searching LDAP #{e.message}')
+        Puppet.debug('Returning empty array')
         return []
       end
     end
