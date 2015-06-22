@@ -15,5 +15,8 @@ Puppet::Parser::Functions.newfunction(:ldapquery,
 
   filter, attributes, base = args
 
+  attributes ||= []
+  base ||= Puppet[:ldapbase]
+
   return PuppetX::LDAPquery.new(filter, attributes, base).results
 end
