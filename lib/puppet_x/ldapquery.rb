@@ -92,8 +92,8 @@ module PuppetX
         return entries
       rescue Exception => e
         Puppet.debug('There was an error searching LDAP #{e.message}')
-        Puppet.debug('Returning empty array')
-        return []
+        Puppet.debug('Returning false')
+        return false
       end
     end
 
