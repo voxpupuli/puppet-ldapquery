@@ -1,6 +1,6 @@
 {
   "name": "zleslie-ldapquery",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Zach Leslie",
   "summary": "Query an LDAP server using Puppet.",
   "license": "Apache-2.0",
