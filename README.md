@@ -12,10 +12,24 @@ The Ruby `net-ldap` gem is required to communicate with LDAP.
 
 ### On the Master
 
+
 You must set the necessary variables in `puppet.conf` so the master can connect
 to your LDAP server.
 
-Add something like the following to your master's manifest.
+You can simply add the static values like so:
+
+```INI
+[master]
+ldaptls = true
+ldapport = 636
+ldapserver = ldap.example.com
+ldapbase = dc=example,dc=com
+ldapuser = cn=puppet,ou=people,dc=example,dc=com
+ldappassword = aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+```
+
+Or, use Puppet to manage the values in `puppet.conf` by adding something like
+the following to the manifest that manages your master's `puppet.conf`.
 
 ```Puppet
 $ldap_base   = hiera('ldap_base') # dc=example,dc=com
@@ -91,4 +105,37 @@ $attributes = [
 $zach = ldapquery('(uid=zach)', $attributes)
 ```
 
+Assuming there is only one LDAP object with the `uid=zach`, then the variable
+`$zach` now holds the following data structure:
+
+```Ruby
+[
+  {
+    'uid' => 'zach',
+    'loginshell' => '/bin/zsh',
+    'uidnumber' => '123',
+    'homedirectory' => '/var/users/zach',
+  }
+]
+```
+
+Here is a slightly more complicate example that will generate *virtual*
+`ssh_authorized_key` resources for every 'posixAccount' that has a non-empty
+'sshPublicKey' attribute.
+
+```Puppet
+$key_results  = ldapquery('(&(objectClass=ldapPublicKey)(sshPublicKey=*)(objectClass=posixAccount))', ['uid', 'sshPublicKey'])
+$key_results.each |$u| {
+  any2array($u['sshpublickey']).each |$k| {
+    $keyparts = split($k, ' ')
+    $comment = $keyparts[2]
+    @ssh_authorized_key { "${$u['uid']}_${comment}":
+      user    => $u['uid'],
+      type    => $keyparts[0],
+      key     => $keyparts[1],
+      require => User[$u['uid']],
+    }
+  }
+}
+```
 
