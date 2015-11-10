@@ -88,10 +88,10 @@ module PuppetX
         end_time = Time.now
         time_delta = sprintf('%.3f', end_time - start_time)
 
-        Puppet.debug("Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds and returned #{entries.length} results")
+        Puppet.debug("ldapquery(): Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds and returned #{entries.length} results")
         return entries
       rescue Exception => e
-        Puppet.debug('There was an error searching LDAP #{e.message}')
+        Puppet.debug("There was an error searching LDAP #{e.message}")
         Puppet.debug('Returning false')
         return false
       end
@@ -105,21 +105,15 @@ module PuppetX
         entry.each do |attribute, values|
 
           attr = attribute.to_s
-
-          if values.is_a? Array and values.size > 1
-            entry_data[attr] = []
-
-            values.each do |v|
-              entry_data[attr] << v.chomp
-            end
-          elsif values.is_a? Array and values.size == 1
-            entry_data[attr] = values[0].chomp
-          else
-            entry_data[attr] = values.chomp
+          value_data = []
+          Array(values).flatten.each do |v|
+            value_data << v.chomp
           end
+          entry_data[attr] = value_data
         end
         data << entry_data
       end
+      Puppet.debug(data)
       return data
     end
 
