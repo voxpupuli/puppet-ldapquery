@@ -88,7 +88,7 @@ module PuppetX
         end_time = Time.now
         time_delta = sprintf('%.3f', end_time - start_time)
 
-        Puppet.debug("Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds")
+        Puppet.debug("Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds and returned #{entries.length} results")
         return entries
       rescue Exception => e
         Puppet.debug('There was an error searching LDAP #{e.message}')
