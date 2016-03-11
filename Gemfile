@@ -11,7 +11,7 @@ group :test do
   gem "puppetlabs_spec_helper"
   gem "metadata-json-lint"
   gem "rspec-puppet-facts"
-  gem "net-ldap"
+  gem 'net-ldap', '~> 0.12.1'
 end
 
 group :development do
