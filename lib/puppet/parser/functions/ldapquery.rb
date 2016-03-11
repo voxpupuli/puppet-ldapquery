@@ -1,4 +1,4 @@
-require 'puppet_x/ldapquery'
+require_relative '../../../puppet_x/ldapquery'
 
 begin
   require 'net/ldap'
