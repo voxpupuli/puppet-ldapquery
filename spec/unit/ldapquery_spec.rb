@@ -28,13 +28,13 @@ describe 'PuppetX::LDAPquery' do
       filter = '(uid=zach)'
       attributes = ['uid']
 
-      wanted = [{"dn"=>"uid=zach,ou=users,dc=puppetlabs,dc=com", "uid"=>"zach"}]
+      wanted = [{"dn"=>["uid=zach,ou=users,dc=puppetlabs,dc=com"], "uid"=>["zach"]}]
       entries = Marshal.load(File.read("spec/fixtures/entries_single.obj"))
 
       l = PuppetX::LDAPquery.new(filter, attributes, base)
 
       expect(l).to receive(:get_entries).and_return(entries)
-      expect(l.results).to match(wanted)
+      expect(l.results).to eq(wanted)
     end
 
     context "a multivalued attribute is requested" do
@@ -42,35 +42,25 @@ describe 'PuppetX::LDAPquery' do
         filter = '(uid=zach)'
         attributes = ['objectClass']
 
-        wanted = [{"dn"=>"uid=zach,ou=users,dc=puppetlabs,dc=com",
-                  "objectclass"=> [
-                    "posixAccount",
-                    "shadowAccount",
-                    "inetOrgPerson",
-                    "puppetPerson",
-                    "ldapPublicKey",
-                    "top"]}]
+        wanted =[{"dn"=>["uid=zach,ou=users,dc=puppetlabs,dc=com"], "objectclass"=>["posixAccount", "shadowAccount", "inetOrgPerson", "puppetPerson", "ldapPublicKey", "top"]}]
 
         entries = Marshal.load(File.read("spec/fixtures/entries_objectClass.obj"))
 
         l = PuppetX::LDAPquery.new(filter, attributes, base)
         expect(l).to receive(:get_entries).and_return(entries)
-        expect(l.results).to match(wanted)
+        expect(l.results).to eq(wanted)
       end
       it 'should return the attributes without new lines' do
         filter = '(uid=zach)'
         attributes = ['sshPublicKey']
 
-        wanted = [{"dn"=>"uid=zach,ou=users,dc=puppetlabs,dc=com",
-                  "sshpublickey"=>
-        ["ssh-rsa AAAAB...1== user@somewhere",
-        "ssh-rsa AAAAB...2== user@somewhereelse"]}]
+        wanted = [{"dn"=>["uid=zach,ou=users,dc=puppetlabs,dc=com"], "sshpublickey"=>["ssh-rsa AAAAB...1== user@somewhere", "ssh-rsa AAAAB...2== user@somewhereelse"]}]
 
         entries = Marshal.load(File.read("spec/fixtures/entries_multivalue.obj"))
 
         l = PuppetX::LDAPquery.new(filter, attributes, base)
         expect(l).to receive(:get_entries).and_return(entries)
-        expect(l.results).to match(wanted)
+        expect(l.results).to eq(wanted)
       end
     end
   end
