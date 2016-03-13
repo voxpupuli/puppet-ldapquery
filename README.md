@@ -88,9 +88,9 @@ ini_setting { 'ldaptls':
 
 ### In manifest
 
-The `ldapquery` function is simple.  Just passing an `rfc4515` search filter
-will return the results of the query in list form.  Optionally, a list of
-attributes of which to return the values may also be passed.
+Simply passing an `rfc4515` search filter string to `ldapquery()` will return
+the results of the query in list form.  Optionally, a list of attributes of
+which to return the values may also be passed.
 
 Consider the following manifest.
 
@@ -111,31 +111,48 @@ Assuming there is only one LDAP object with the `uid=zach`, then the variable
 ```Ruby
 [
   {
-    'uid' => 'zach',
-    'loginshell' => '/bin/zsh',
-    'uidnumber' => '123',
-    'homedirectory' => '/var/users/zach',
+    'uid' => ['zach'],
+    'loginshell' => ['/bin/zsh'],
+    'uidnumber' => ['123'],
+    'homedirectory' => ['/var/users/zach'],
   }
 ]
 ```
+
+**Note that the key values are an array.**  This should make implementation code simpler, if a bit more verbose, and avoid having to check if the value is an array or a string, because it always is.
 
 Here is a slightly more complicate example that will generate *virtual*
 `ssh_authorized_key` resources for every 'posixAccount' that has a non-empty
 'sshPublicKey' attribute.
 
 ```Puppet
-$key_results  = ldapquery('(&(objectClass=ldapPublicKey)(sshPublicKey=*)(objectClass=posixAccount))', ['uid', 'sshPublicKey'])
+$attributes = [
+  'uid',
+  'sshPublicKey'
+]
+
+$key_query = '(&(objectClass=ldapPublicKey)(sshPublicKey=*)(objectClass=posixAccount))'
+
+$key_results  = ldapquery($key_query, $attributes)
 $key_results.each |$u| {
   any2array($u['sshpublickey']).each |$k| {
     $keyparts = split($k, ' ')
-    $comment = $keyparts[2]
-    @ssh_authorized_key { "${$u['uid']}_${comment}":
-      user    => $u['uid'],
-      type    => $keyparts[0],
-      key     => $keyparts[1],
-      require => User[$u['uid']],
+
+    # Retrieve the comment portion
+    if $keyparts =~ Array[String, 3] {
+      $comment  = $keyparts[2]
+    } else {
+      $comment  = ''
+    }
+
+    $uid = $u['uid'][0]
+
+    @ssh_authorized_key { "${uid}_${comment}":
+      user => $uid,
+      type => $keyparts[0],
+      key  => $keyparts[1],
+      tag  => 'ldap',
     }
   }
 }
 ```
-
