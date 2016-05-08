@@ -8,11 +8,24 @@ module PuppetX
     def initialize(
       filter,
       attributes=[],
-      base=Puppet[:ldapbase]
+      base=Puppet[:ldapbase],
+      scope='sub'
     )
       @filter = filter
       @attributes = attributes
       @base = base
+
+      if scope
+        if scope == 'sub'
+          @scope = Net::LDAP::SearchScope_WholeSubtree
+        elsif scope == 'base'
+          @scope = Net::LDAP::SearchScope_BaseObject
+        elsif scope == 'single'
+          @scope = Net::LDAP::SearchScope_SingleLevel
+        else
+          raise Puppet::ParseError, 'Received param "scope" not one of ["sub","base","single"]'
+        end
+      end
     end
 
     def get_config
@@ -66,23 +79,27 @@ module PuppetX
       # Query the LDAP server for attributes using the filter
       #
       # Returns: An array of Net::LDAP::Entry objects
-      ldapfilter = @filter
-      attributes = @attributes
-      base = @base
-
       conf = self.get_config()
 
       start_time = Time.now
       ldap = Net::LDAP.new(conf)
-      ldapfilter = Net::LDAP::Filter.construct(@filter)
+
+      search_args = {
+          :base => @base,
+          :attributes => @attributes,
+          :scope => @scope,
+          :time => 10,
+      }
+
+      if @filter and @filter.length > 0
+        ldapfilter = Net::LDAP::Filter.construct(@filter)
+        search_args[:filter] = ldapfilter
+      end
 
       entries = []
 
       begin
-        ldap.search(:base => base,
-                    :filter => ldapfilter,
-                    :attributes => attributes,
-                    :time => 10) do |entry|
+        ldap.search(search_args) do |entry|
           entries << entry
         end
         end_time = Time.now
