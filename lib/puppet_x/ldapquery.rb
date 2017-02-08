@@ -7,44 +7,44 @@ module PuppetX
 
     def initialize(
       filter,
-      attributes=[],
-      base=Puppet[:ldapbase],
-      scope='sub'
+      attributes = [],
+      base = Puppet[:ldapbase],
+      scope = 'sub'
     )
       @filter = filter
       @attributes = attributes
       @base = base
 
-      if scope
-        if scope == 'sub'
-          @scope = Net::LDAP::SearchScope_WholeSubtree
-        elsif scope == 'base'
-          @scope = Net::LDAP::SearchScope_BaseObject
-        elsif scope == 'single'
-          @scope = Net::LDAP::SearchScope_SingleLevel
-        else
-          raise Puppet::ParseError, 'Received param "scope" not one of ["sub","base","single"]'
-        end
+      return unless scope
+
+      if scope == 'sub'
+        @scope = Net::LDAP::SearchScope_WholeSubtree
+      elsif scope == 'base'
+        @scope = Net::LDAP::SearchScope_BaseObject
+      elsif scope == 'single'
+        @scope = Net::LDAP::SearchScope_SingleLevel
+      else
+        raise Puppet::ParseError, 'Received param "scope" not one of ["sub","base","single"]'
       end
     end
 
-    def get_config
+    def ldap_config
       # Load the configuration variables from Puppet
       required_vars = [
         :ldapserver,
-        :ldapport,
+        :ldapport
       ]
 
-      required_vars.each {|r|
+      required_vars.each do |r|
         unless Puppet[r]
-          raise Puppet::ParseError, "Missing required setting '#{r.to_s}' in puppet.conf"
+          raise Puppet::ParseError, "Missing required setting '#{r}' in puppet.conf"
         end
-      }
+      end
 
       host = Puppet[:ldapserver]
       port = Puppet[:ldapport]
 
-      if Puppet[:ldapuser] and Puppet[:ldappassword]
+      if Puppet[:ldapuser] && Puppet[:ldappassword]
         user     = Puppet[:ldapuser]
         password = Puppet[:ldappassword]
       end
@@ -53,45 +53,45 @@ module PuppetX
       ca_file = "#{Puppet[:confdir]}/ldap_ca.pem"
 
       conf = {
-        :host => host,
-        :port => port,
+        host: host,
+        port: port
       }
 
-      if user != '' and password != ''
+      if (user != '') && (password != '')
         conf[:auth] = {
-          :method   => :simple,
-          :username => user,
-          :password => password,
+          method: :simple,
+          username: user,
+          password: password
         }
       end
 
       if tls
         conf[:encryption] = {
-          :method      => :simple_tls,
-          :tls_options => { :ca_file => ca_file }
+          method: :simple_tls,
+          tls_options: { ca_file: ca_file }
         }
       end
 
-      return conf
+      conf
     end
 
-    def get_entries()
+    def entries
       # Query the LDAP server for attributes using the filter
       #
       # Returns: An array of Net::LDAP::Entry objects
-      conf = self.get_config()
+      conf = ldap_config
 
       start_time = Time.now
       ldap = Net::LDAP.new(conf)
 
       search_args = {
-          :base => @base,
-          :attributes => @attributes,
-          :scope => @scope,
-          :time => 10,
+        base: @base,
+        attributes: @attributes,
+        scope: @scope,
+        time: 10
       }
 
-      if @filter and @filter.length > 0
+      if @filter && !@filter.empty?
         ldapfilter = Net::LDAP::Filter.construct(@filter)
         search_args[:filter] = ldapfilter
       end
@@ -103,11 +103,11 @@ module PuppetX
           entries << entry
         end
         end_time = Time.now
-        time_delta = sprintf('%.3f', end_time - start_time)
+        time_delta = format('%.3f', end_time - start_time)
 
         Puppet.debug("ldapquery(): Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds and returned #{entries.length} results")
         return entries
-      rescue Exception => e
+      rescue LdapError => e
         Puppet.debug("There was an error searching LDAP #{e.message}")
         Puppet.debug('Returning false')
         return false
@@ -116,11 +116,9 @@ module PuppetX
 
     def parse_entries
       data = []
-      entries = get_entries()
       entries.each do |entry|
         entry_data = {}
         entry.each do |attribute, values|
-
           attr = attribute.to_s
           value_data = []
           Array(values).flatten.each do |v|
@@ -131,7 +129,7 @@ module PuppetX
         data << entry_data
       end
       Puppet.debug(data)
-      return data
+      data
     end
 
     def results
