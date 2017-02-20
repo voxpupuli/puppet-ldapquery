@@ -11,14 +11,14 @@ require_relative '../../../puppet_x/ldapquery'
 begin
   require 'net/ldap'
 rescue
-  Puppet.warn("Missing net/ldap gem required for ldapquery() function")
+  Puppet.warn('Missing net/ldap gem required for ldapquery() function')
 end
 
 Puppet::Parser::Functions.newfunction(:ldapquery,
-                                      :type => :rvalue) do |args|
+                                      type: :rvalue) do |args|
 
   if args.size > 4
-    raise Puppet::ParseError, "Too many arguments received in ldapquery()"
+    raise Puppet::ParseError, 'Too many arguments received in ldapquery()'
   end
 
   filter, attributes, base, scope = args
