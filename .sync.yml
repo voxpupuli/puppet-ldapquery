@@ -6,4 +6,4 @@ Gemfile:
     ':testextra':
       - gem: 'rspec-mocks'
       - gem: 'rspec-expectations'
-mock_with: ':rspec
+mock_with: ':rspec'
