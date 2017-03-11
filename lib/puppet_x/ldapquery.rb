@@ -107,7 +107,7 @@ module PuppetX
 
         Puppet.debug("ldapquery(): Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds and returned #{entries.length} results")
         return entries
-      rescue LdapError => e
+      rescue Net::LDAP::LdapError => e
         Puppet.debug("There was an error searching LDAP #{e.message}")
         Puppet.debug('Returning false')
         return false
