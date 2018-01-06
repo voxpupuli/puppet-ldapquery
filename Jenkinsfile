@@ -1,5 +1,10 @@
 pipeline {
   agent any
+
+  environment {
+    PATH = "$PATH:$HOME/.rbenv/bin"
+  }
+
   stages {
     stage('bundle') {
       steps {
