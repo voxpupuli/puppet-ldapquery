@@ -6,6 +6,11 @@ pipeline {
   }
 
   stages {
+    stage('printenv') {
+      steps {
+        sh 'printenv'
+      }
+    }
     stage('bundle') {
       steps {
         sh 'bundle'
