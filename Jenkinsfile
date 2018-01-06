@@ -1,19 +1,30 @@
 pipeline {
   agent any
+
+  triggers { pollSCM('*/15 * * * *') }
+
+  environment {
+    PATH = "$PATH:~/.rbenv/bin"
+  }
+
   stages {
-    stage('bundle') {
+    stage('test') {
       steps {
-        sh 'bundle'
+        sh '. .env.sh && printenv && bundle'
+        sh '. .env.sh && bundle exec rake test'
       }
     }
-    stage('rake test') {
-      steps {
-        sh 'bundle exec rake test'
+
+    stage('build') {
+      when {
+        branch 'master'
       }
-    }
-    stage('module:build') {
+
       steps {
-        sh 'bundle exec rake module:build'
+        sh '. .env.sh && bundle exec rake clean'
+        sh '. .env.sh && bundle exec rake build'
+
+        sh '[ "$(git rev-list -n 1 $(git tag | tail -n 1 ))" == "$(git rev-list -n 1 HEAD)" ] && bundle exec rake publish pkg/*.tar.gz'
       }
     }
   }
