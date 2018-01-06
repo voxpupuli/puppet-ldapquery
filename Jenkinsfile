@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    PATH = "$PATH:$HOME/.rbenv/bin"
+    PATH = "$PATH:~/.rbenv/bin"
   }
 
   stages {
