@@ -8,7 +8,10 @@ pipeline {
   stages {
     stage('printenv') {
       steps {
-        sh 'printenv'
+        sh '''
+        eval "$(rbenv init -)"
+        printenv
+        '''
       }
     }
     stage('bundle') {
