@@ -1,4 +1,6 @@
 #! /bin/bash
 
-export PATH="$PATH:~/.rbenv/bin"
-eval "$(rbenv init -)"
+if [ -x ~/.rbenv/bin/rbenv ]; then
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(~/.rbenv/bin/rbenv init -)"
+fi
