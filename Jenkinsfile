@@ -21,9 +21,12 @@ pipeline {
         sh '. .env.sh && bundle exec rake clean'
       }
     }
-    stage('build') {
-      steps {
-        sh '. .env.sh && bundle exec rake build'
+
+    if (env.BRANCH_NAME == "master") {
+      stage('build') {
+        steps {
+          sh '. .env.sh && bundle exec rake build'
+        }
       }
     }
   }
