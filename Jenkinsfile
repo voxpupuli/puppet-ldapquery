@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('bundle') {
       steps {
-        sh '. .env.sh && bundle'
+        sh '. .env.sh && printenv && bundle'
       }
     }
     stage('rake test') {
@@ -16,9 +16,14 @@ pipeline {
         sh '. .env.sh && bundle exec rake test'
       }
     }
-    stage('module:build') {
+    stage('clean') {
       steps {
-        sh '. .env.sh && bundle exec rake module:build'
+        sh '. .env.sh && bundle exec rake clean'
+      }
+    }
+    stage('build') {
+      steps {
+        sh '. .env.sh && bundle exec rake build'
       }
     }
   }
