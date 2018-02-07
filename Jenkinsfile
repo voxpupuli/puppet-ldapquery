@@ -23,10 +23,11 @@ pipeline {
     }
 
     stage('build') {
+      when {
+        branch 'master'
+      }
       steps {
-        if (env.BRANCH_NAME == 'master') {
-          sh '. .env.sh && bundle exec rake build'
-        }
+        sh '. .env.sh && bundle exec rake build'
       }
     }
   }
