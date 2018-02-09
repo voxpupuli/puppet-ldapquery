@@ -6,19 +6,10 @@ pipeline {
   }
 
   stages {
-    stage('bundle') {
+    stage('test') {
       steps {
         sh '. .env.sh && printenv && bundle'
-      }
-    }
-    stage('rake test') {
-      steps {
         sh '. .env.sh && bundle exec rake test'
-      }
-    }
-    stage('clean') {
-      steps {
-        sh '. .env.sh && bundle exec rake clean'
       }
     }
 
@@ -26,8 +17,12 @@ pipeline {
       when {
         branch 'master'
       }
+
       steps {
+        sh '. .env.sh && bundle exec rake clean'
         sh '. .env.sh && bundle exec rake build'
+
+        sh '[ "$(git rev-list -n 1 $(git tag | tail -n 1 ))" == "$(git rev-list -n 1 HEAD)" ] && bundle exec rake publish pkg/*.tar.gz'
       }
     }
   }
