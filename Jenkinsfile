@@ -1,6 +1,8 @@
 pipeline {
   agent any
 
+  triggers { pollSCM('*/15 * * * *') }
+
   environment {
     PATH = "$PATH:~/.rbenv/bin"
   }
