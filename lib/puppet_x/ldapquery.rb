@@ -52,7 +52,7 @@ module PuppetX
       tls = Puppet[:ldaptls]
       ca_file = "#{Puppet[:confdir]}/ldap_ca.pem"
 
-      # TODO if not exists ldap_ca.pem fail
+      # TODO: if not exists ldap_ca.pem fail
 
       conf = {
         host: host,
