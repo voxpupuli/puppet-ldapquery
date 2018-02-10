@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('test') {
       steps {
-        sh '. .env.sh && printenv && bundle'
+        sh '. .env.sh && printenv && bundle install --without=development'
         sh '. .env.sh && bundle exec rake test'
       }
     }
