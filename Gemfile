@@ -44,7 +44,7 @@ group :development do
 end
 
 group :extra do
-  gem 'net-ldap', '~> 0.12.1',  :require => false
+  gem 'net-ldap', '~> 0.16.0',  :require => false
 end
 
 group :testextra do
