@@ -21,10 +21,11 @@ pipeline {
       }
 
       steps {
+        sh 'git fetch --all --tags'
         sh '. .env.sh && bundle exec rake clean'
         sh '. .env.sh && bundle exec rake build'
 
-        sh '[ "$(git rev-list -n 1 $(git tag | tail -n 1 ))" == "$(git rev-list -n 1 HEAD)" ] && bundle exec rake publish pkg/*.tar.gz'
+        sh '[ "$(git rev-list -n 1 $(git tag | tail -n 1 ))" == "$(git rev-list -n 1 HEAD)" ] && bundle exec rake publish pkg/*.tar.gz || echo HEAD is not a tag'
       }
     }
   }
