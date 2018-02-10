@@ -25,7 +25,7 @@ pipeline {
         sh '. .env.sh && bundle exec rake clean'
         sh '. .env.sh && bundle exec rake build'
 
-        sh '[ "$(git rev-list -n 1 $(git tag | tail -n 1 ))" == "$(git rev-list -n 1 HEAD)" ] && bundle exec rake module:push || echo HEAD is not a tag'
+        sh '. .env.sh && [ "$(git rev-list -n 1 $(git tag | tail -n 1 ))" == "$(git rev-list -n 1 HEAD)" ] && bundle exec rake module:push || echo HEAD is not a tag'
       }
     }
   }
