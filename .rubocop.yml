@@ -539,6 +539,9 @@ Layout/IndentHeredoc:
 Security/YAMLLoad:
   Enabled: false
 
+Security/MarshalLoad:
+  Enabled: false
+
 # This affects hiera interpolation, as well as some configs that we push.
 Style/FormatStringToken:
   Enabled: false

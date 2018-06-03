@@ -44,7 +44,7 @@ describe 'PuppetX::LDAPquery' do
         filter = '(uid=zach)'
         attributes = ['objectClass']
 
-        wanted = [{ 'dn' => ['uid=zach,ou=users,dc=puppetlabs,dc=com'], 'objectclass' => %w(posixAccount shadowAccount inetOrgPerson puppetPerson ldapPublicKey top) }]
+        wanted = [{ 'dn' => ['uid=zach,ou=users,dc=puppetlabs,dc=com'], 'objectclass' => %w[posixAccount shadowAccount inetOrgPerson puppetPerson ldapPublicKey top] }]
 
         entries = Marshal.load(File.read('spec/fixtures/entries_objectClass.obj'))
 
