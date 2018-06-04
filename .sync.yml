@@ -8,3 +8,6 @@ Gemfile:
       - gem: 'rspec-expectations'
 spec/spec_helper.rb:
   mock_with: ':rspec'
+.rubocop.yml:
+  cops:
+    Security/MarshalLoad: false
