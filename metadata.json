@@ -1,12 +1,13 @@
 {
   "name": "zleslie-ldapquery",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "author": "Zach Leslie",
   "summary": "Query an LDAP server using Puppet.",
   "license": "Apache-2.0",
   "source": "https://github.com/xaque208/puppet-ldapquery",
   "project_page": "https://github.com/xaque208/puppet-ldapquery",
   "issues_url": "https://github.com/xaque208/puppet-ldapquery/issues",
-  "dependencies": [ ]
-}
+  "dependencies": [
 
+  ]
+}

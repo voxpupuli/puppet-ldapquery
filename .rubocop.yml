@@ -13,6 +13,10 @@ AllCops:
     - Rakefile
     - Guardfile
     - Vagrantfile
+
+Security/MarshalLoad:
+  Enabled: false
+
 Lint/ConditionPosition:
   Enabled: True
 
@@ -537,9 +541,6 @@ Layout/IndentHeredoc:
 
 # disable Yaml safe_load. This is needed to support ruby2.0.0 development envs
 Security/YAMLLoad:
-  Enabled: false
-
-Security/MarshalLoad:
   Enabled: false
 
 # This affects hiera interpolation, as well as some configs that we push.
