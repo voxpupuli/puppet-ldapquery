@@ -8,6 +8,14 @@ A Puppet function to query LDAP.
 
 The Ruby `net-ldap` gem is required to communicate with LDAP. The current version of net-ldap requires ruby 2.0.0. If you run your master with puppetserver you have to use version 0.12.1 which is the last version compatible with ruby 1.9 which is used by puppetserver. To install this use the following command: `puppetserver gem install net-ldap -v 0.12.1`
 
+In some environments, when `ldapquery()` is used on Puppet Server, an error
+like the following may appear.
+
+    Error while evaluating a Function Call
+
+Please make sure you have `jruby-openssl` at least `0.10.1` with `puppetserver
+gem install jruby-openssl -v 0.10.1`.
+
 ## Sample Usage
 
 ### On the Master

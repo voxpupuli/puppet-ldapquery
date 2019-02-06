@@ -2,7 +2,7 @@ Gemfile:
   optional:
     ':extra':
       - gem: 'net-ldap'
-        version: '~> 0.12.1'
+        version: '~> 0.16.1'
     ':testextra':
       - gem: 'rspec-mocks'
       - gem: 'rspec-expectations'
