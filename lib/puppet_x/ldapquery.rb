@@ -69,8 +69,7 @@ module PuppetX
 
       if tls
         conf[:encryption] = {
-          method: :simple_tls,
-          tls_options: { ca_file: ca_file }
+          method: :simple_tls
         }
         if File.file?(ca_file)
           conf[:encryption][:tls_options] = { ca_file: ca_file }
