@@ -52,8 +52,6 @@ module PuppetX
       tls = Puppet[:ldaptls]
       ca_file = "#{Puppet[:confdir]}/ldap_ca.pem"
 
-      # TODO: if not exists ldap_ca.pem fail
-
       conf = {
         host: host,
         port: port
@@ -69,9 +67,14 @@ module PuppetX
 
       if tls
         conf[:encryption] = {
-          method: :simple_tls,
-          tls_options: { ca_file: ca_file }
+          method: :simple_tls
         }
+        if File.file?(ca_file)
+          Puppet.debug("Using #{ca_file} as CA for TLS connection")
+          conf[:encryption][:tls_options] = { ca_file: ca_file }
+        else
+          Puppet.debug("#{ca_file} not found, using default CAs installed in your system")
+        end
       end
 
       conf
