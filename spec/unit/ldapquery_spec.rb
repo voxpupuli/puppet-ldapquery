@@ -2,6 +2,10 @@ require 'spec_helper'
 require 'puppet_x/ldapquery'
 require 'net/ldap'
 
+def load_fixture(filename)
+  Marshal.load(File.read(File.join('spec', 'fixtures', filename))) # rubocop:disable Security/MarshalLoad
+end
+
 describe 'PuppetX::LDAPquery' do
   describe 'results' do
     let(:conf) do
@@ -31,7 +35,7 @@ describe 'PuppetX::LDAPquery' do
       attributes = ['uid']
 
       wanted = [{ 'dn' => ['uid=zach,ou=users,dc=puppetlabs,dc=com'], 'uid' => ['zach'] }]
-      entries = Marshal.load(File.read('spec/fixtures/entries_single.obj'))
+      entries = load_fixture('entries_single.obj')
 
       l = PuppetX::LDAPquery.new(filter, attributes, base)
 
@@ -46,7 +50,7 @@ describe 'PuppetX::LDAPquery' do
 
         wanted = [{ 'dn' => ['uid=zach,ou=users,dc=puppetlabs,dc=com'], 'objectclass' => %w[posixAccount shadowAccount inetOrgPerson puppetPerson ldapPublicKey top] }]
 
-        entries = Marshal.load(File.read('spec/fixtures/entries_objectClass.obj'))
+        entries = load_fixture('entries_objectClass.obj')
 
         l = PuppetX::LDAPquery.new(filter, attributes, base)
         allow(l).to receive(:entries).and_return(entries)
@@ -58,7 +62,7 @@ describe 'PuppetX::LDAPquery' do
 
         wanted = [{ 'dn' => ['uid=zach,ou=users,dc=puppetlabs,dc=com'], 'sshpublickey' => ['ssh-rsa AAAAB...1== user@somewhere', 'ssh-rsa AAAAB...2== user@somewhereelse'] }]
 
-        entries = Marshal.load(File.read('spec/fixtures/entries_multivalue.obj'))
+        entries = load_fixture('entries_multivalue.obj')
 
         l = PuppetX::LDAPquery.new(filter, attributes, base)
         allow(l).to receive(:entries).and_return(entries)
