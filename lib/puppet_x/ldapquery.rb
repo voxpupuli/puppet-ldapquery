@@ -9,11 +9,13 @@ module PuppetX
       filter,
       attributes = [],
       base = Puppet[:ldapbase],
-      scope = 'sub'
+      scope = 'sub',
+      server = Puppet[:ldapserver]
     )
       @filter = filter
       @attributes = attributes
       @base = base
+      @host = server
 
       return unless scope
 
@@ -41,7 +43,6 @@ module PuppetX
         end
       end
 
-      host = Puppet[:ldapserver]
       port = Puppet[:ldapport]
 
       if Puppet[:ldapuser] && Puppet[:ldappassword]
@@ -53,7 +54,7 @@ module PuppetX
       ca_file = "#{Puppet[:confdir]}/ldap_ca.pem"
 
       conf = {
-        host: host,
+        host: @host,
         port: port
       }
 
