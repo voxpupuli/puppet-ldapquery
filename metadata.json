@@ -7,6 +7,12 @@
   "source": "https://github.com/xaque208/puppet-ldapquery",
   "project_page": "https://github.com/xaque208/puppet-ldapquery",
   "issues_url": "https://github.com/xaque208/puppet-ldapquery/issues",
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.5.8 < 7.0.0"
+    }
+  ],
   "dependencies": [
 
   ]
