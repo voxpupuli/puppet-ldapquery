@@ -1,12 +1,12 @@
 {
-  "name": "zleslie-ldapquery",
+  "name": "puppet-ldapquery",
   "version": "1.0.3",
-  "author": "Zach Leslie",
+  "author": "Vox Pupuli",
   "summary": "Query an LDAP server using Puppet.",
   "license": "Apache-2.0",
-  "source": "https://github.com/xaque208/puppet-ldapquery",
-  "project_page": "https://github.com/xaque208/puppet-ldapquery",
-  "issues_url": "https://github.com/xaque208/puppet-ldapquery/issues",
+  "source": "https://github.com/voxpupuli/puppet-ldapquery",
+  "project_page": "https://github.com/voxpupuli/puppet-ldapquery",
+  "issues_url": "https://github.com/voxpupuli/puppet-ldapquery/issues",
   "requirements": [
     {
       "name": "puppet",
