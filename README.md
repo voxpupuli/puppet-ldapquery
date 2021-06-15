@@ -1,6 +1,11 @@
 # Puppet-LDAPquery
 
-[![Puppet Forge](https://img.shields.io/puppetforge/v/zleslie/ldapquery.svg)]() [![Build Status](https://travis-ci.org/xaque208/puppet-ldapquery.svg?branch=master)](https://travis-ci.org/xaque208/puppet-ldapquery)
+[![CI](https://github.com/voxpupuli/puppet-ldapquery/actions/workflows/ci.yml/badge.svg)](https://github.com/voxpupuli/puppet-ldapquery/actions/workflows/ci.yml)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/ldapquery.svg)](https://forge.puppetlabs.com/puppet/ldapquery)
+[![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/ldapquery.svg)](https://forge.puppetlabs.com/puppet/ldapquery)
+[![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/ldapquery.svg)](https://forge.puppetlabs.com/puppet/ldapquery)
+[![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/ldapquery.svg)](https://forge.puppetlabs.com/puppet/ldapquery)
+[![Apache-2 License](https://img.shields.io/github/license/voxpupuli/puppet-ldapquery.svg)](LICENSE)
 
 A Puppet function to query LDAP.
 
