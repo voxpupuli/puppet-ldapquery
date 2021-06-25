@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.1.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v2.1.0) (2021-06-24)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v2.0.0...v2.1.0)
+
+**Implemented enhancements:**
+
+- Put options for ldapquery into opts argument [\#29](https://github.com/voxpupuli/puppet-ldapquery/pull/29) ([treydock](https://github.com/treydock))
+
 ## [v2.0.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v2.0.0) (2021-06-15)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/1.0.3...v2.0.0)
