@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Provides a query interface to an LDAP server
 #
 # @example simple query
@@ -10,16 +12,13 @@ require_relative '../../../puppet_x/ldapquery'
 
 begin
   require 'net/ldap'
-rescue
+rescue StandardError
   Puppet.warn('Missing net/ldap gem required for ldapquery() function')
 end
 
 Puppet::Parser::Functions.newfunction(:ldapquery,
                                       type: :rvalue) do |args|
-
-  if args.size > 3
-    raise Puppet::ParseError, 'Too many arguments received in ldapquery()'
-  end
+  raise Puppet::ParseError, 'Too many arguments received in ldapquery()' if args.size > 3
 
   filter, attributes, opts = args
 

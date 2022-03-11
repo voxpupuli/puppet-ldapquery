@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Class: PuppetX::LDAPquery
 #
 
@@ -19,11 +21,12 @@ module PuppetX
 
       return unless scope
 
-      if scope == 'sub'
+      case scope
+      when 'sub'
         @scope = Net::LDAP::SearchScope_WholeSubtree
-      elsif scope == 'base'
+      when 'base'
         @scope = Net::LDAP::SearchScope_BaseObject
-      elsif scope == 'single'
+      when 'single'
         @scope = Net::LDAP::SearchScope_SingleLevel
       else
         raise Puppet::ParseError, 'Received param "scope" not one of ["sub","base","single"]'
@@ -32,15 +35,13 @@ module PuppetX
 
     def ldap_config
       # Load the configuration variables from Puppet
-      required_vars = [
-        :ldapserver,
-        :ldapport
+      required_vars = %i[
+        ldapserver
+        ldapport
       ]
 
       required_vars.each do |r|
-        unless Puppet[r]
-          raise Puppet::ParseError, "Missing required setting '#{r}' in puppet.conf"
-        end
+        raise Puppet::ParseError, "Missing required setting '#{r}' in puppet.conf" unless Puppet[r]
       end
 
       port = Puppet[:ldapport]
@@ -112,11 +113,11 @@ module PuppetX
         time_delta = format('%.3f', end_time - start_time)
 
         Puppet.debug("ldapquery(): Searching #{@base} for #{@attributes} using #{@filter} took #{time_delta} seconds and returned #{entries.length} results")
-        return entries
+        entries
       rescue Net::LDAP::LdapError => e
         Puppet.debug("There was an error searching LDAP #{e.message}")
         Puppet.debug('Returning false')
-        return false
+        false
       end
     end
 
