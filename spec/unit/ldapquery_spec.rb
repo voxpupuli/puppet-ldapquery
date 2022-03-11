@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet_x/ldapquery'
 require 'net/ldap'
@@ -20,7 +22,7 @@ describe 'PuppetX::LDAPquery' do
     it 'fails with no filter' do
       filter = ''
       attributes = ['uid']
-      expect { PuppetX::LDAPquery.new(filter, attributes).results }.to raise_error
+      expect { PuppetX::LDAPquery.new(filter, attributes).results }.to raise_error # rubocop:disable RSpec/UnspecifiedException
     end
 
     it 'does not fail when using defaults in puppet.conf' do
@@ -56,6 +58,7 @@ describe 'PuppetX::LDAPquery' do
         allow(l).to receive(:entries).and_return(entries)
         expect(l.results).to eq(wanted)
       end
+
       it 'returns the attributes without new lines' do
         filter = '(uid=zach)'
         attributes = ['sshPublicKey']
