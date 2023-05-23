@@ -11,9 +11,16 @@ Puppet::Functions.create_function(:'ldapquery::query') do
   local_types do
     type <<~TYPE_ALIAS
       Options = Struct[
-        Optional[base]   => String[1],
-        Optional[scope]  => Enum['sub','base','single'],
-        Optional[server] => String[1],
+        Optional[base]           => String[1],
+        Optional[cafile]         => String[1],
+        Optional[connecttimeout] => Integer[0],
+        Optional[password]       => String[1],
+        Optional[port]           => Integer[0,65535],
+        Optional[scope]          => Enum['sub','base','single'],
+        Optional[server]         => String[1],
+        Optional[time]           => Integer[0],
+        Optional[tls]            => Variant[Enum['simple_tls','start_tls'],Boolean],
+        Optional[user]           => String[1],
       ]
     TYPE_ALIAS
   end
@@ -23,7 +30,7 @@ Puppet::Functions.create_function(:'ldapquery::query') do
   # @param attributes
   #   Which attributes you want to query
   # @param options
-  #   Function options where you can specify `base`, `scope`, and `server`.
+  #   Function options where you can specify ruby net/ldap related options
   #
   # @example Simple query
   #   ldapquery::query("(objectClass=dnsDomain)", ['dc'])
@@ -38,25 +45,64 @@ Puppet::Functions.create_function(:'ldapquery::query') do
   attr_accessor :filter
   attr_accessor :attributes
   attr_accessor :base
+  attr_accessor :ca_file
+  attr_accessor :connect_timeout
   attr_accessor :host
+  attr_accessor :password
+  attr_accessor :port
   attr_accessor :scope
+  attr_accessor :time
+  attr_accessor :tls
+  attr_accessor :user
 
   def query(filter, attributes = [], options = {})
     @filter = filter
     @attributes = attributes
     @base = options['base'] || Puppet.settings[:ldapbase]
-    @host = options['server'] || Puppet.settings[:ldapserver]
+    @time = options['time'] || 10
 
     scope = options['scope'] || 'sub'
+    @scope =
+      case scope
+      when 'sub'
+        Net::LDAP::SearchScope_WholeSubtree
+      when 'base'
+        Net::LDAP::SearchScope_BaseObject
+      when 'single'
+        Net::LDAP::SearchScope_SingleLevel
+      end
 
-    case scope
-    when 'sub'
-      @scope = Net::LDAP::SearchScope_WholeSubtree
-    when 'base'
-      @scope = Net::LDAP::SearchScope_BaseObject
-    when 'single'
-      @scope = Net::LDAP::SearchScope_SingleLevel
-    end
+    @host = options['server'] || Puppet.settings[:ldapserver]
+    raise Puppet::ParseError, 'Missing required setting "server" or "ldapserver" in puppet.conf' if @host.nil?
+
+    @port = options['port'] || Puppet.settings[:ldapport]
+    @port ||= 363
+    @user = options['user'] || Puppet.settings[:ldapuser]
+    @password = options['password'] || Puppet.settings[:ldappassword]
+    @connect_timeout = options['connecttimeout'] || Puppet.settings[:ldapconnecttimeout]
+    @connect_timeout ||= 5
+
+    tls = options['tls'] || Puppet.settings[:ldaptls]
+    tls ||= false
+    @tls =
+      case tls
+      when 'simple_tls'
+        :simple_tls
+      when 'start_tls'
+        :start_tls
+      when true
+        case @port
+        when 363
+          :start_tls
+        else
+          :simple_tls
+        end
+      when false
+        nil
+      end
+
+    @ca_file = options['cafile'] || Puppet.settings[:ldaptlscafile]
+    @ca_file ||= "#{Puppet.settings[:confdir]}/ldap_ca.pem"
 
     results
   end
@@ -92,7 +138,7 @@ Puppet::Functions.create_function(:'ldapquery::query') do
       base: @base,
       attributes: @attributes,
       scope: @scope,
-      time: 10
+      time: @time
     }
 
     if @filter && !@filter.empty?
@@ -119,48 +165,36 @@ Puppet::Functions.create_function(:'ldapquery::query') do
   end
 
   def ldap_config
-    # Load the configuration variables from Puppet
-    required_vars = %i[
-      ldapserver
-      ldapport
-    ]
-
-    required_vars.each do |r|
-      raise Puppet::ParseError, "Missing required setting '#{r}' in puppet.conf" unless Puppet[r]
-    end
-
-    port = Puppet[:ldapport]
-
-    if Puppet[:ldapuser] && Puppet[:ldappassword]
-      user     = Puppet[:ldapuser]
-      password = Puppet[:ldappassword]
-    end
-
-    tls = Puppet[:ldaptls]
-    ca_file = "#{Puppet[:confdir]}/ldap_ca.pem"
-
+    # Convert settings to ldap config for net/ldap
     conf = {
       host: @host,
-      port: port
+      port: @port
     }
 
-    if (user != '') && (password != '')
-      conf[:auth] = {
-        method: :simple,
-        username: user,
-        password: password
-      }
-    end
+    conf[:connect_timeout] = @connect_timeout unless @connect_timeout.nil?
 
-    if tls
-      conf[:encryption] = {
-        method: :simple_tls
-      }
-      if File.file?(ca_file)
-        Puppet.debug("Using #{ca_file} as CA for TLS connection")
-        conf[:encryption][:tls_options] = { ca_file: ca_file }
+    conf[:auth] =
+      if (@user == '') || (@password == '')
+        {
+          method: :anonymous
+        }
       else
-        Puppet.debug("#{ca_file} not found, using default CAs installed in your system")
+        {
+          method: :simple,
+          username: @user,
+          password: @password
+        }
+      end
+
+    unless @tls.nil?
+      conf[:encryption] = {
+        method: @tls
+      }
+      if File.file?(@ca_file)
+        Puppet.debug("Using #{@ca_file} as CA for TLS connection")
+        conf[:encryption][:tls_options] = { ca_file: @ca_file }
+      else
+        Puppet.debug("#{@ca_file} not found, using default CAs installed in your system")
       end
     end
 
