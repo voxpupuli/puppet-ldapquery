@@ -13,7 +13,7 @@ A Puppet function to query LDAP.
 
 The Ruby `net-ldap` gem is required to communicate with LDAP. To install this use the following command: `puppetserver gem install net-ldap`.  Version 0.11.0 or newer of `net-ldap` is required.
 
-In some environments, when `ldapquery()` is used on Puppet Server, an error
+In some environments, when `ldapquery::query()` is used on Puppet Server, an error
 like the following may appear.
 
     Error while evaluating a Function Call
@@ -23,10 +23,9 @@ gem install jruby-openssl -v 0.10.1`.
 
 ## Sample Usage
 
-### On the Master
+### On the Puppetserver
 
-
-You must set the necessary variables in `puppet.conf` so the master can connect
+You must set the necessary variables in `puppet.conf` so the puppetserver can connect
 to your LDAP server. You also have to place the CA certificate (and possible intermediate certificates) of the tls certificate of your ldap server in pem format in a file called ldap_ca.pem in your puppetconf folder.
 
 You can simply add the static values like so:
@@ -54,7 +53,7 @@ package { 'net-ldap':
   provider => 'gem'
 }
 
-file { '/etc/puppet/ldap_ca.pem':
+file { '/etc/puppetlabs/puppet/ldap_ca.pem':
   owner  => 'root',
   group  => '0',
   mode   => '0644',
@@ -64,7 +63,7 @@ file { '/etc/puppet/ldap_ca.pem':
 Ini_setting {
   ensure  => present,
   section => 'master',
-  path    => '/etc/puppet/puppet.conf',
+  path    => '/etc/puppetlabs/puppet/puppet.conf',
 }
 
 ini_setting { 'ldapserver':
@@ -98,10 +97,9 @@ ini_setting { 'ldaptls':
 }
 ```
 
-
 ### In manifest
 
-Simply passing an `rfc4515` search filter string to `ldapquery()` will return
+Simply passing an `rfc4515` search filter string to `ldapquery::query()` will return
 the results of the query in list form.  Optionally, a list of attributes of
 which to return the values may also be passed.
 
@@ -115,7 +113,7 @@ $attributes = [
   'homedirectory',
 ]
 
-$zach = ldapquery('(uid=zach)', $attributes)
+$zach = ldapquery::query('(uid=zach)', $attributes)
 ```
 
 Assuming there is only one LDAP object with the `uid=zach`, then the variable
@@ -146,7 +144,7 @@ $attributes = [
 
 $key_query = '(&(objectClass=ldapPublicKey)(sshPublicKey=*)(objectClass=posixAccount))'
 
-$key_results  = ldapquery($key_query, $attributes)
+$key_results  = ldapquery::query($key_query, $attributes)
 $key_results.each |$u| {
   any2array($u['sshpublickey']).each |$k| {
     $keyparts = split($k, ' ')
