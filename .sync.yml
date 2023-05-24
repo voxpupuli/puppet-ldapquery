@@ -1,8 +1,11 @@
+---
 Gemfile:
   optional:
     ':extra':
       - gem: 'net-ldap'
-        version: '~> 0.16.1'
+        version: '~> 0.18.0'
     ':testextra':
       - gem: 'rspec-mocks'
       - gem: 'rspec-expectations'
+.github/workflows/ci.yml:
+    unmanaged: true

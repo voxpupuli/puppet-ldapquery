@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-# @summary Provides a query interface to an LDAP server
+# @summary Provides a legacy query interface to an LDAP server
+# This function uses LDAP connection options sourced from `puppet.conf` and is **DEPRECATED**. Consider migrating to `ldapquery::search` instead.
 Puppet::Functions.create_function(:'ldapquery::query') do
   begin
     require 'net/ldap'

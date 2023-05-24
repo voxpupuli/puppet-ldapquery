@@ -6,8 +6,9 @@
 
 ### Functions
 
-* [`ldapquery`](#ldapquery): DEPRECATED.  Use the namespaced function [`ldapquery::query`](#ldapqueryquery) instead.
-* [`ldapquery::query`](#ldapquery--query): Provides a query interface to an LDAP server
+* [`ldapquery`](#ldapquery): DEPRECATED.  Use the namespaced function [`ldapquery::query`](#ldapqueryquery) instead or migrate to the replacement [`ldapquery::search`](#ldapquerysearch) function instead.
+* [`ldapquery::query`](#ldapquery--query): Provides a legacy query interface to an LDAP server
+* [`ldapquery::search`](#ldapquery--search): Provides a search query interface to LDAP server(s). This function is a replacement for `ldapquery::query`.
 
 ## Functions
 
@@ -15,7 +16,7 @@
 
 Type: Ruby 4.x API
 
-DEPRECATED.  Use the namespaced function [`ldapquery::query`](#ldapqueryquery) instead.
+DEPRECATED.  Use the namespaced function [`ldapquery::query`](#ldapqueryquery) instead or migrate to the replacement [`ldapquery::search`](#ldapquerysearch) function instead.
 
 #### `ldapquery(Any *$args)`
 
@@ -33,7 +34,7 @@ Data type: `Any`
 
 Type: Ruby 4.x API
 
-Provides a query interface to an LDAP server
+This function uses LDAP connection options sourced from `puppet.conf` and is **DEPRECATED**. Consider migrating to `ldapquery::search` instead.
 
 #### Examples
 
@@ -51,7 +52,7 @@ ldapquery::query('(&(objectClass=ldapPublicKey)(sshPublicKey=*)(objectClass=posi
 
 #### `ldapquery::query(String[1] $filter, Optional[Array[String[1]]] $attributes, Optional[Options] $options)`
 
-The ldapquery::query function.
+This function uses LDAP connection options sourced from `puppet.conf` and is **DEPRECATED**. Consider migrating to `ldapquery::search` instead.
 
 Returns: `Any`
 
@@ -86,4 +87,361 @@ Which attributes you want to query
 Data type: `Optional[Options]`
 
 Function options where you can specify `base`, `scope`, and `server`.
+
+### <a name="ldapquery--search"></a>`ldapquery::search`
+
+Type: Ruby 4.x API
+
+Provides a search query interface to LDAP server(s). This function is a replacement for `ldapquery::query`.
+
+#### Examples
+
+##### Querying an LDAP server on the default port with a username and password
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host => 'ldap.example.com',
+    auth => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+##### Trying to connect to multiple LDAP servers to perform the search
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    hosts => [
+      [ldap1.example.com, 389],
+      [ldap2.example.com, 389],
+    ],
+    auth => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+##### Not specifying `ldap_args` as all options needed exist in `ldapquery.yaml`.
+
+```puppet
+# /etc/puppetlabs/puppet/ldapquery.yaml
+# ---
+# base: dc=acme,dc=example,dc=com
+# host: ldap.example.com
+# auth:
+#   method: simple
+#   username: ldapuser
+#   password: ldappassword
+
+ldapquery::search(
+  undef, # `base` can also be set in `ldapquery.yaml`
+  '(objectClass=dnsDomain)',
+  ['dc'],
+)
+```
+
+##### Querying an LDAP server using TLS and the system cert store
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host       => 'ldap.example.com',
+    port       => 636,
+    encryption => {
+      method => simple_tls,
+    },
+    auth       => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+##### Querying an LDAP server using TLS with a custom CA certificate
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host       => 'ldap.example.com',
+    port       => 636,
+    encryption => {
+      method      => simple_tls,
+      tls_options => { ca_file => '/path/to/custom-ca.crt' },
+    },
+    auth       => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+##### Querying an LDAP server on the standard port but then encrypting all traffic using STARTTLS
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host       => 'ldap.example.com',
+    port       => 389, # Default included for clarity
+    encryption => {
+      method => start_tls,
+    },
+    auth       => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+##### Specifying a 1 minute `search_timeout`, (and `connect_timeout` via `ldapquery.yaml`)
+
+```puppet
+# /etc/puppetlabs/puppet/ldapquery.yaml
+# ---
+# base: dc=acme,dc=example,dc=com
+# host: ldap.example.com
+# auth:
+#   method: simple
+#   username: ldapuser
+#   password: ldappassword
+# connect_timeout: 30
+
+ldapquery::search(
+  undef, # Use `base` from `ldapquery.yaml`
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {}, # Use `ldapquery.yaml`
+  'sub',
+  60,
+)
+```
+
+#### `ldapquery::search(Optional[String[1]] $base, Optional[String[1]] $filter, Optional[Array[String[1],1]] $attributes, Optional[Optional[LDAPArgs]] $ldap_args, Optional[Optional[Enum["sub","base","single"]]] $scope, Optional[Optional[Integer[1]]] $search_timeout, Optional[Optional[Boolean]] $soft_fail)`
+
+The ldapquery::search function.
+
+Returns: `Optional[Array]` The returned query results.
+
+##### Examples
+
+###### Querying an LDAP server on the default port with a username and password
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host => 'ldap.example.com',
+    auth => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+###### Trying to connect to multiple LDAP servers to perform the search
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    hosts => [
+      [ldap1.example.com, 389],
+      [ldap2.example.com, 389],
+    ],
+    auth => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+###### Not specifying `ldap_args` as all options needed exist in `ldapquery.yaml`.
+
+```puppet
+# /etc/puppetlabs/puppet/ldapquery.yaml
+# ---
+# base: dc=acme,dc=example,dc=com
+# host: ldap.example.com
+# auth:
+#   method: simple
+#   username: ldapuser
+#   password: ldappassword
+
+ldapquery::search(
+  undef, # `base` can also be set in `ldapquery.yaml`
+  '(objectClass=dnsDomain)',
+  ['dc'],
+)
+```
+
+###### Querying an LDAP server using TLS and the system cert store
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host       => 'ldap.example.com',
+    port       => 636,
+    encryption => {
+      method => simple_tls,
+    },
+    auth       => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+###### Querying an LDAP server using TLS with a custom CA certificate
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host       => 'ldap.example.com',
+    port       => 636,
+    encryption => {
+      method      => simple_tls,
+      tls_options => { ca_file => '/path/to/custom-ca.crt' },
+    },
+    auth       => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+###### Querying an LDAP server on the standard port but then encrypting all traffic using STARTTLS
+
+```puppet
+ldapquery::search(
+  'dc=acme,dc=example,dc=com',
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {
+    host       => 'ldap.example.com',
+    port       => 389, # Default included for clarity
+    encryption => {
+      method => start_tls,
+    },
+    auth       => {
+      method   => simple,
+      username => 'ldapuser',
+      password => 'ldappassword',
+    },
+  },
+)
+```
+
+###### Specifying a 1 minute `search_timeout`, (and `connect_timeout` via `ldapquery.yaml`)
+
+```puppet
+# /etc/puppetlabs/puppet/ldapquery.yaml
+# ---
+# base: dc=acme,dc=example,dc=com
+# host: ldap.example.com
+# auth:
+#   method: simple
+#   username: ldapuser
+#   password: ldappassword
+# connect_timeout: 30
+
+ldapquery::search(
+  undef, # Use `base` from `ldapquery.yaml`
+  '(objectClass=dnsDomain)',
+  ['dc'],
+  {}, # Use `ldapquery.yaml`
+  'sub',
+  60,
+)
+```
+
+##### `base`
+
+Data type: `Optional[String[1]]`
+
+The search base to use for this query.  If set to `undef`, the `base` must be set as a default in `ldapquery.yaml` instead.
+
+##### `filter`
+
+Data type: `Optional[String[1]]`
+
+The LDAP search filter to use during the query. If set to `undef`, the default `objectclass=*` will be used.
+
+##### `attributes`
+
+Data type: `Optional[Array[String[1],1]]`
+
+The LDAP attributes to return from the server.
+
+##### `ldap_args`
+
+Data type: `Optional[Optional[LDAPArgs]]`
+
+A Hash containing the options used when connecting to the LDAP server(s). See the [net-ldap documentation](https://www.rubydoc.info/github/ruby-ldap/ruby-net-ldap/Net%2FLDAP:initialize) for all the options you can use.
+This configuration is merged with, (and overrides), any options loaded from `/etc/puppetlabs/puppet/ldapquery.yaml`.  If omitted, `ldapquery.yaml` must contain all the options you need.
+
+##### `scope`
+
+Data type: `Optional[Optional[Enum["sub","base","single"]]]`
+
+The LDAP search scope, (indicates the set of entries at or below the search base DN that may be considered potential matches for a search operation).
+
+##### `search_timeout`
+
+Data type: `Optional[Optional[Integer[1]]]`
+
+The maximum time in seconds allowed for a search. If not specified, defaults to 10 seconds.
+Note, there is a separate net-ldap TCP `connect_timout` (defaulting to 5 seconds) that can be specified via `ldap_args`, (or globally via `ldapquery.yaml`).
+
+##### `soft_fail`
+
+Data type: `Optional[Optional[Boolean]]`
+
+When set to `true`, the function will return `undef` if it experiences an issue connecting to the LDAP server of performing the query.
+Defaults to `false`, which causes the function to fail with an exception if it can't return the requested data.
 
