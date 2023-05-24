@@ -4,7 +4,33 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v2.1.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v2.1.0) (2021-06-24)
+## [v3.0.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v3.0.0) (2023-05-24)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v2.1.0...v3.0.0)
+
+**Breaking changes:**
+
+- Drop Puppet 6 support [\#41](https://github.com/voxpupuli/puppet-ldapquery/pull/41) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Rename `Net::LDAP::LdapError` to `Net::LDAP::Error` [\#38](https://github.com/voxpupuli/puppet-ldapquery/pull/38) ([smortex](https://github.com/smortex))
+
+**Fixed bugs:**
+
+- uninitialized constant `Net::LDAP::LdapError` [\#43](https://github.com/voxpupuli/puppet-ldapquery/issues/43)
+- Do explicit string conversion on values too [\#35](https://github.com/voxpupuli/puppet-ldapquery/pull/35) ([arjenz](https://github.com/arjenz))
+
+**Closed issues:**
+
+- Convert to modern function API and namespace [\#44](https://github.com/voxpupuli/puppet-ldapquery/issues/44)
+- no such file to load -- net/ldap  [\#37](https://github.com/voxpupuli/puppet-ldapquery/issues/37)
+
+**Merged pull requests:**
+
+- Convert function to modern API, refactor and namespace [\#45](https://github.com/voxpupuli/puppet-ldapquery/pull/45) ([alexjfisher](https://github.com/alexjfisher))
+
+## [v2.1.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v2.1.0) (2021-06-25)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v2.0.0...v2.1.0)
 
@@ -26,8 +52,8 @@ These should not affect the functionality of the module.
 - Declare support for Puppet 5 & 6 [\#24](https://github.com/voxpupuli/puppet-ldapquery/pull/24) ([ekohl](https://github.com/ekohl))
 - modulesync 3.0.0 [\#21](https://github.com/voxpupuli/puppet-ldapquery/pull/21) ([bastelfreak](https://github.com/bastelfreak))
 - Ca file optional [\#20](https://github.com/voxpupuli/puppet-ldapquery/pull/20) ([Wiston999](https://github.com/Wiston999))
-- Update from xaque208 modulesync\_config [\#17](https://github.com/voxpupuli/puppet-ldapquery/pull/17) ([xaque208](https://github.com/xaque208))
-- Update from xaque208 modulesync\_config [\#16](https://github.com/voxpupuli/puppet-ldapquery/pull/16) ([xaque208](https://github.com/xaque208))
+- Update from xaque208 modulesync\_config [\#17](https://github.com/voxpupuli/puppet-ldapquery/pull/17) ([zachfi](https://github.com/zachfi))
+- Update from xaque208 modulesync\_config [\#16](https://github.com/voxpupuli/puppet-ldapquery/pull/16) ([zachfi](https://github.com/zachfi))
 
 ## [1.0.3](https://github.com/voxpupuli/puppet-ldapquery/tree/1.0.3) (2019-02-27)
 
@@ -47,8 +73,8 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- Update from xaque208 modulesync\_config [\#13](https://github.com/voxpupuli/puppet-ldapquery/pull/13) ([xaque208](https://github.com/xaque208))
-- Update requirements for net-ldap due to CVE-2017-17718 [\#12](https://github.com/voxpupuli/puppet-ldapquery/pull/12) ([xaque208](https://github.com/xaque208))
+- Update from xaque208 modulesync\_config [\#13](https://github.com/voxpupuli/puppet-ldapquery/pull/13) ([zachfi](https://github.com/zachfi))
+- Update requirements for net-ldap due to CVE-2017-17718 [\#12](https://github.com/voxpupuli/puppet-ldapquery/pull/12) ([zachfi](https://github.com/zachfi))
 
 ## [0.5.1](https://github.com/voxpupuli/puppet-ldapquery/tree/0.5.1) (2018-02-10)
 
@@ -72,7 +98,7 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- modulesync 2017-02-07 [\#9](https://github.com/voxpupuli/puppet-ldapquery/pull/9) ([xaque208](https://github.com/xaque208))
+- modulesync 2017-02-07 [\#9](https://github.com/voxpupuli/puppet-ldapquery/pull/9) ([zachfi](https://github.com/zachfi))
 
 ## [0.3.1](https://github.com/voxpupuli/puppet-ldapquery/tree/0.3.1) (2016-05-18)
 
@@ -84,7 +110,7 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- Add support for scoped queries [\#8](https://github.com/voxpupuli/puppet-ldapquery/pull/8) ([xaque208](https://github.com/xaque208))
+- Add support for scoped queries [\#8](https://github.com/voxpupuli/puppet-ldapquery/pull/8) ([zachfi](https://github.com/zachfi))
 
 ## [0.2.1](https://github.com/voxpupuli/puppet-ldapquery/tree/0.2.1) (2016-04-04)
 
@@ -96,7 +122,7 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- Always return an array for the values [\#7](https://github.com/voxpupuli/puppet-ldapquery/pull/7) ([xaque208](https://github.com/xaque208))
+- Always return an array for the values [\#7](https://github.com/voxpupuli/puppet-ldapquery/pull/7) ([zachfi](https://github.com/zachfi))
 
 ## [0.1.8](https://github.com/voxpupuli/puppet-ldapquery/tree/0.1.8) (2016-03-13)
 
@@ -104,7 +130,7 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- Update require for puppet\_x to use relative path [\#6](https://github.com/voxpupuli/puppet-ldapquery/pull/6) ([xaque208](https://github.com/xaque208))
+- Update require for puppet\_x to use relative path [\#6](https://github.com/voxpupuli/puppet-ldapquery/pull/6) ([zachfi](https://github.com/zachfi))
 
 ## [0.1.7](https://github.com/voxpupuli/puppet-ldapquery/tree/0.1.7) (2015-11-10)
 
@@ -128,7 +154,7 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- Improve debugging, add timing information [\#4](https://github.com/voxpupuli/puppet-ldapquery/pull/4) ([xaque208](https://github.com/xaque208))
+- Improve debugging, add timing information [\#4](https://github.com/voxpupuli/puppet-ldapquery/pull/4) ([zachfi](https://github.com/zachfi))
 
 ## [0.1.3](https://github.com/voxpupuli/puppet-ldapquery/tree/0.1.3) (2015-06-14)
 
@@ -148,8 +174,8 @@ These should not affect the functionality of the module.
 
 **Merged pull requests:**
 
-- Rewrite [\#3](https://github.com/voxpupuli/puppet-ldapquery/pull/3) ([xaque208](https://github.com/xaque208))
-- Begin module testing [\#1](https://github.com/voxpupuli/puppet-ldapquery/pull/1) ([xaque208](https://github.com/xaque208))
+- Rewrite [\#3](https://github.com/voxpupuli/puppet-ldapquery/pull/3) ([zachfi](https://github.com/zachfi))
+- Begin module testing [\#1](https://github.com/voxpupuli/puppet-ldapquery/pull/1) ([zachfi](https://github.com/zachfi))
 
 
 
