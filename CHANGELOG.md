@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.1.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v3.1.0) (2023-11-16)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v3.0.0...v3.1.0)
+
+Version 3.1.0 of the `ldapquery` module introduces `ldapquery::search`, a new function for LDAP search queries. This addition is part of our ongoing efforts to enhance and modernise the module. While `ldapquery::search` is set to become the preferred method for LDAP queries, the existing `ldapquery::query` function will remain available and unchanged until at least the next major version release.
+
+This approach ensures a smooth transition for users as they adapt to the new functionality. We encourage users to try `ldapquery::search` and share their feedback.
+
+**Implemented enhancements:**
+
+- Add Puppet 8 support [\#48](https://github.com/voxpupuli/puppet-ldapquery/pull/48) ([bastelfreak](https://github.com/bastelfreak))
+
+**Merged pull requests:**
+
+- Add replacement ldapquery::search function [\#47](https://github.com/voxpupuli/puppet-ldapquery/pull/47) ([alexjfisher](https://github.com/alexjfisher))
+
 ## [v3.0.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v3.0.0) (2023-05-24)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v2.1.0...v3.0.0)
