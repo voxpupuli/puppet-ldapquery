@@ -180,6 +180,7 @@ Puppet::Functions.create_function(:'ldapquery::search') do
     end
 
     conf[:encryption][:method] = conf[:encryption][:method].to_sym if conf.dig(:encryption, :method)
+    conf[:encryption][:tls_options].transform_keys!(&:to_sym) if conf.dig(:encryption, :tls_options)
     conf[:auth][:method] = conf[:auth][:method].to_sym if conf.dig(:auth, :method)
 
     ldap = Net::LDAP.new(conf)
