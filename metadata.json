@@ -1,6 +1,6 @@
 {
   "name": "puppet-ldapquery",
-  "version": "3.1.1-rc0",
+  "version": "3.1.1",
   "author": "Vox Pupuli",
   "summary": "Query an LDAP server using Puppet.",
   "license": "Apache-2.0",
@@ -17,9 +17,7 @@
       "version_requirement": ">= 7.0.0 < 9.0.0"
     }
   ],
-  "dependencies": [
-
-  ],
+  "dependencies": [],
   "operatingsystem_support": [
     {
       "operatingsystem": "Debian",
