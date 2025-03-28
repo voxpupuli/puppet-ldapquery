@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.1.1](https://github.com/voxpupuli/puppet-ldapquery/tree/v3.1.1) (2025-03-28)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v3.1.0...v3.1.1)
+
+**Implemented enhancements:**
+
+- metadata.json: Add OpenVox [\#63](https://github.com/voxpupuli/puppet-ldapquery/pull/63) ([jstraw](https://github.com/jstraw))
+
+**Fixed bugs:**
+
+- Transform keys to symbols within `tls_options` hash [\#64](https://github.com/voxpupuli/puppet-ldapquery/pull/64) ([alexjfisher](https://github.com/alexjfisher))
+
 ## [v3.1.0](https://github.com/voxpupuli/puppet-ldapquery/tree/v3.1.0) (2023-11-16)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-ldapquery/compare/v3.0.0...v3.1.0)
