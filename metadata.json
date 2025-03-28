@@ -1,6 +1,6 @@
 {
   "name": "puppet-ldapquery",
-  "version": "3.1.1",
+  "version": "3.1.2-rc0",
   "author": "Vox Pupuli",
   "summary": "Query an LDAP server using Puppet.",
   "license": "Apache-2.0",
