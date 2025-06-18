@@ -1,3 +1,2 @@
-fixtures:
-  symlinks:
-    ldapquery: "#{source_dir}"
+---
+fixtures: {}
