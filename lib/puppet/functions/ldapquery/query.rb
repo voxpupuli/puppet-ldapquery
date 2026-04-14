@@ -93,7 +93,7 @@ Puppet::Functions.create_function(:'ldapquery::query') do
       base: @base,
       attributes: @attributes,
       scope: @scope,
-      time: 10
+      time: 10,
     }
 
     if @filter && !@filter.empty?
@@ -142,20 +142,20 @@ Puppet::Functions.create_function(:'ldapquery::query') do
 
     conf = {
       host: @host,
-      port: port
+      port: port,
     }
 
     if (user != '') && (password != '')
       conf[:auth] = {
         method: :simple,
         username: user,
-        password: password
+        password: password,
       }
     end
 
     if tls
       conf[:encryption] = {
-        method: :simple_tls
+        method: :simple_tls,
       }
       if File.file?(ca_file)
         Puppet.debug("Using #{ca_file} as CA for TLS connection")

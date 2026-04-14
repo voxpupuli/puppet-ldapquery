@@ -34,21 +34,21 @@ describe 'ldapquery::search function' do
             [
               {
                 'dn' => [
-                  'cn=user01,ou=users,dc=example,dc=org'
+                  'cn=user01,ou=users,dc=example,dc=org',
                 ],
                 'uid' => [
-                  'user01'
-                ]
+                  'user01',
+                ],
               },
               {
                 'dn' => [
-                  'cn=user02,ou=users,dc=example,dc=org'
+                  'cn=user02,ou=users,dc=example,dc=org',
                 ],
                 'uid' => [
-                  'user02'
-                ]
-              }
-            ]
+                  'user02',
+                ],
+              },
+            ],
           )
         end
       end
